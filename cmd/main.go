@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/myeung18/cockroachdb-go-quickstart/controller"
+	"github.com/myeung18/cockroachdb-go-quickstart/pkg/controller"
 	"log"
 	"net/http"
 )
