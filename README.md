@@ -5,7 +5,7 @@ The application shows the minimal CRUD service by exposing a set of endpoints ov
 
 Under the hood:
 * Go Gorilla to expose REST endpoints
-* pgx library to connection to CockroachDB Cloud
+* pgx library to connect to CockroachDB Cloud
 * [Service Binding Client](https://github.com/RHEcosystemAppEng/sbo-go-library) to load the connection properties and returns the Connection string
 * Compatible with [DBaaS](https://github.com/RHEcosystemAppEng/dbaas-operator)
 

@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/RHEcosystemAppEng/sbo-go-library/pkg/binding/convert"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/jackc/pgx/v4"
 	"github.com/myeung18/cockroachdb-go-quickstart/pkg/fruit"
-	"github.com/myeung18/sbo-go-library/pkg/binding/convert"
 	"log"
 	"net/http"
 )
