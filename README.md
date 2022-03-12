@@ -26,16 +26,14 @@ SERVICE_BINDING_ROOT=$ABSOLUTE_PATH/test/bindings go run ./cmd/main.go
 # Use a browser to access the front-end: http://localhost:8080 
 ```
 
-
 ### Run in OpenShift
 
 #### Prerequisite
 
 * Go 1.17 or above
 * Docker
-* Setup a [CockroachDB Cluster](https://www.cockroachlabs.com/get-started-cockroachdb/), see `Initialize database`
 * OpenShift 4.9 or above
-* Setup the [DBaaS](https://github.com/RHEcosystemAppEng/dbaas-operator) in OpenShift.
+* Setup the [DBaaS](https://github.com/RHEcosystemAppEng/dbaas-operator) in OpenShift and use CockroachDB Could as the database provider.
 
 ```shell
 # build and push the application to an image registry
@@ -53,10 +51,13 @@ $ oc apply -f ./deploy-crdb-app.yaml
 
 This application targets [CockroachDB](https://www.cockroachlabs.com/get-started-cockroachdb/) (other PostgreSQL compatible database should also work).
 
-Once a CockroachDB cluster is created, run the `dbinit.sql` to create the sample table and data.
+Once a CockroachDB cluster is created. 
+During the startup, this sample application will create the `fruit` table with few initial rows automatically. 
+
+In case you want to run your own SQL, you can run the following command with your specific settings:
 ```yaml
 e.g.:
-$ cat dbinit.sql | cockroach sql --url 'postgresql://<username>:<password>@<serverless-host>:26257/defaultdb?sslmode=verify-full&sslrootcert='$HOME'/.postgresql/root.crt&options=--cluster=<routing-id>'
+$ cat <some-sql-file> | cockroach sql --url 'postgresql://<username>:<password>@<serverless-host>:26257/defaultdb?sslmode=verify-full&sslrootcert='$HOME'/.postgresql/root.crt&options=--cluster=<routing-id>'
 
 ```
 

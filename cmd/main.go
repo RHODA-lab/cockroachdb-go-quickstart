@@ -1,15 +1,19 @@
 package main
 
 import (
-	"github.com/golang-migrate/migrate"
 	"github.com/gorilla/mux"
 	"github.com/myeung18/cockroachdb-go-quickstart/pkg/controller"
+	"github.com/myeung18/cockroachdb-go-quickstart/pkg/database"
 	"log"
 	"net/http"
 )
 
 func main() {
 	startWeb()
+}
+
+func init() {
+	database.MigrateWithEmbed()
 }
 
 func startWeb() {
@@ -24,17 +28,4 @@ func startWeb() {
 	}
 	log.Println("Fruit service is Listening..")
 	server.ListenAndServe()
-}
-
-
-func migrateDB() {
-	m, err := migrate.New(
-		"file://db/migrations",
-		"cockroachdb://cockroach:@localhost:26257/example?sslmode=disable")
-	if err != nil {
-		log.Fatal(err)
-	}
-	if err := m.Up(); err != nil {
-		log.Fatal(err)
-	}
 }
