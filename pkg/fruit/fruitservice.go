@@ -27,7 +27,7 @@ func (s *Service) ListFruits() []Fruit {
 	if s.db == nil {
 		return fruits
 	}
-	rows, err := s.db.Query(s.ctx, "select id, name from fruit")
+	rows, err := s.db.Query(s.ctx, "select id, name, quantity from fruit")
 	if err != nil {
 		log.Fatal(err)
 		return nil
@@ -37,12 +37,14 @@ func (s *Service) ListFruits() []Fruit {
 	for rows.Next() {
 		var id uuid.UUID
 		var name string
-		if err := rows.Scan(&id, &name); err != nil {
+		var quantity string
+		if err := rows.Scan(&id, &name, &quantity); err != nil {
 			log.Println("failed to read fruit", err)
 		}
 		fruits = append(fruits, Fruit{
-			Id:   id.String(),
-			Name: name,
+			Id:       id.String(),
+			Name:     name,
+			Quantity: quantity,
 		})
 	}
 	return fruits
@@ -52,7 +54,10 @@ func (s *Service) Create(fruit Fruit) error {
 	if s.db == nil {
 		return errors.New("DB Connection is not created")
 	}
-	if _, err := s.db.Exec(s.ctx, "insert into fruit (id, name) values ($1, $2)", fruit.Id, fruit.Name); err != nil {
+	if fruit.Name == "" {
+		return errors.New("Missing fruit name")
+	}
+	if _, err := s.db.Exec(s.ctx, "insert into fruit (id, name, quantity) values ($1, $2, $3)", fruit.Id, fruit.Name, fruit.Quantity); err != nil {
 		log.Println("failed to create a fruit", err)
 		return err
 	}
@@ -63,7 +68,10 @@ func (s *Service) Update(fruit Fruit) error {
 	if s.db == nil {
 		return errors.New("DB Connection is not created")
 	}
-	if _, err := s.db.Exec(s.ctx, "update fruit set name = $1 where id = $2", fruit.Name, fruit.Id); err != nil {
+	if fruit.Name == "" {
+		return errors.New("Missing fruit name")
+	}
+	if _, err := s.db.Exec(s.ctx, "update fruit set name = $1, quantity = $2 where id = $3", fruit.Name, fruit.Quantity, fruit.Id); err != nil {
 		log.Println("failed to update the fruit", err)
 		return err
 	}
@@ -75,7 +83,7 @@ func (s *Service) FindByID(id string) (*Fruit, error) {
 	if s.db == nil {
 		return nil, errors.New("DB Connection is not created")
 	}
-	if err := s.db.QueryRow(s.ctx, "select id, name from fruit where id = $1", id).Scan(&fruit.Id, &fruit.Name); err != nil {
+	if err := s.db.QueryRow(s.ctx, "select id, name, quantity from fruit where id = $1", id).Scan(&fruit.Id, &fruit.Name, &fruit.Quantity); err != nil {
 		log.Println(fmt.Sprintf("failed to select the fruit %v", id), err)
 		return nil, err
 	}

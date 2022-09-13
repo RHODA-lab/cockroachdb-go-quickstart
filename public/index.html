@@ -32,7 +32,8 @@
 
         $scope.form = {
           id: -1,
-          name: ""
+          name: "",
+          quantity: ""
         };
 
         //Now load the data from server
@@ -48,11 +49,13 @@
             method = "POST";
             url = '/fruits';
             data.name = $scope.form.name;
+            data.quantity = $scope.form.quantity;
           } else {
             //If Id is present, it's edit operation - PUT operation
             method = "PUT";
             url = '/fruits/' + $scope.form.id;
             data.name = $scope.form.name;
+            data.quantity = $scope.form.quantity;
           }
 
           $http({
@@ -76,6 +79,7 @@
         //In case of edit fruits, populate form with fruit data
         $scope.edit = function (fruit) {
           $scope.form.name = fruit.name;
+          $scope.form.quantity = fruit.quantity;
           $scope.form.id = fruit.id;
         };
 
@@ -104,6 +108,7 @@
         //Clear the form
         function _clearForm() {
           $scope.form.name = "";
+          $scope.form.quantity = "";
           $scope.form.id = -1;
         }
       });
@@ -130,6 +135,7 @@
     <form ng-submit="update()">
         <div class="row">
             <div class="col-6"><input type="text" placeholder="Name" ng-model="form.name" size="60"/></div>
+            <div class="col-6"><input type="text" placeholder="Quantity" ng-model="form.quantity" size="20"/></div>
         </div>
         <input type="submit" value="Save"/>
     </form>
@@ -140,6 +146,7 @@
     </div>
     <div class="row" ng-repeat="fruit in fruits">
         <div class="col-2">{{ fruit.name }}</div>
+        <div class="col-2">{{ fruit.quantity }}</div>
         <div class="col-8"><a ng-click="edit( fruit )" class="btn">Edit</a> <a ng-click="remove( fruit )" class="btn">Remove</a>
         </div>
     </div>
